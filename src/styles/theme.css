@@ -1,0 +1,54 @@
+:root {
+    --azul-oscuro: #0b1d3a;
+    --salmon: #fa8072;
+    --blanco: #ffffff;
+  }
+  
+  /* Aplicar fondo y texto global */
+  body {
+    background-color: var(--blanco);
+    color: var(--azul-oscuro);
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* Navbar */
+  .navbar {
+    background-color: var(--azul-oscuro) !important;
+  }
+  
+  .navbar-brand, .nav-link {
+    color: var(--blanco) !important;
+    font-weight: 500;
+  }
+  
+  .nav-link:hover {
+    color: var(--salmon) !important;
+  }
+  
+  /* Títulos y secciones */
+  h1, h2, h3 {
+    color: var(--azul-oscuro);
+  }
+  
+  /* Botones */
+  .btn-salmon {
+    background-color: var(--salmon);
+    color: var(--blanco);
+    border: none;
+  }
+  
+  .btn-salmon:hover {
+    background-color: #e67065;
+  }
+  
+  /* Enlaces */
+  a {
+    color: var(--salmon);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
