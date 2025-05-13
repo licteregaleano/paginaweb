@@ -1,28 +1,12 @@
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import Hero from '../components/Hero';
+import Presentation from '../components/Presentation';
 
 const Home = () => {
   return (
     <Container className="mt-5">
-      {/* Encabezado */}
-      <Row className="mb-4">
-        <Col>
-          <h1 className="text-center">Dra. Teresa Galeano</h1>
-          <h4 className="text-center text-muted">Psicóloga Clínica y Psicoterapeuta</h4>
-        </Col>
-      </Row>
-
-      {/* Presentación breve */}
-      <Row className="mb-5">
-        <Col md={{ span: 8, offset: 2 }}>
-          <p>
-            Soy psicóloga por vocación y por pasión. Trabajo en mi consultorio privado desde hace 25 años, ayudando a cientos de pacientes a resolver 
-            problemas como depresión, ansiedad, problemas de sueño, problemas de pareja, autoestima, recuperación pos separación, trastornos 
-            alimenticios y entre otros. Soy Licenciada en Psicología por la Universidad Católica de Asunción. También tengo un Máster en Psicología 
-            social con énfasis en Terapia Familiar y de Pareja. Tengo varios posgrados en el exterior y culminé un Doctorado en la Universidad 
-            Interamericana.
-          </p>
-        </Col>
-      </Row>
+      <Hero />
+      <Presentation />
 
       {/* Servicios destacados */}
       <Row className="mb-5">

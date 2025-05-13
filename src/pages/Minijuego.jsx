@@ -1,0 +1,187 @@
+import React, { useState } from 'react';
+import { Container, Button, Form, Card, ListGroup } from 'react-bootstrap';
+
+const categories = [
+  {
+    name: 'Divertidas',
+    questions: [
+      "¿Cuál fue tu primera impresión de mí?",
+      "¿Creés en el amor a primera vista?",
+      "¿Cuál es tu película favorita?",
+      "¿Cuál es tu canción de karaoke favorita?",
+      "¿Qué tipo de comida te gusta?",
+      "¿Creés en los fantasmas?",
+      "¿Cuál es tu color favorito?",
+      "¿Cuál es tu libro favorito?",
+      "¿Por qué terminó tu última relación?",
+      "¿Qué es algo que realmente te asusta?",
+      "¿Qué relación tenés con tu ex?",
+      "¿Cuáles son las tareas del hogar que menos te gusta hacer?",
+      "¿Cómo es un día perfecto para vos?",
+      "¿Qué haces cuando te sentís estresado?",
+      "¿Cuál es tu comida favorita para compartir en una cita nocturna?"
+    ]
+  },
+  {
+    name: 'Pasado',
+    questions: [
+      "¿Quién fue tu primer amor y cómo era?",
+      "¿Alguna vez te han engañado?",
+      "¿Alguna vez has engañado a alguien?",
+      "¿Sigues en contacto con algún amigo de la infancia?",
+      "¿Tuviste una experiencia positiva en la escuela secundaria?",
+      "¿Cuál fue el primer álbum que tuviste?",
+      "¿Alguna vez has ganado un premio deportivo?",
+      "¿Qué sientes por tus ex?",
+      "¿Qué ha sido lo más atrevido que has hecho hasta ahora?",
+      "¿Puedes describir cómo fue tu primer desamor?",
+      "¿Qué es algo que solías creer sobre las relaciones pero que ya no crees?",
+      "¿Eras 'popular' en la escuela secundaria?",
+      "¿Qué es lo peor que te ha pasado?",
+      "¿Qué es lo que más extrañas de la infancia?",
+      "¿Cuál es tu mayor arrepentimiento en la vida hasta ahora?"
+    ]
+  },
+  {
+    name: 'Futuro',
+    questions: [
+      "¿Es importante para vos formar una familia?",
+      "¿Cómo ves nuestro futuro como pareja, tanto por separado como colectivamente?",
+      "En cinco a diez años, ¿dónde te ves?",
+      "¿Cómo te gustaría que sea nuestra futura casa?",
+      "¿Cómo te sentís acerca de tener hijos?",
+      "¿Querés ser dueño de una casa algún día?",
+      "¿Hay algún lugar que te guste y que te gustaría mostrarme algún día?",
+      "¿Alguna vez te mudarías para adaptarte a tu trabajo?",
+      "¿Qué hay de nosotros que creés que funciona bien juntos? ¿Cómo nos equilibramos unos a otros?",
+      "¿Hay algo que has soñado hacer durante mucho tiempo? ¿Por qué no lo has hecho?",
+      "¿Cuáles son tus metas en la relación?",
+      "¿Tenés algún hábito que quieras cambiar?",
+      "¿Dónde te ves viviendo cuando te jubiles?",
+      "¿Cuáles son sus prioridades y metas financieras?",
+      "¿Tenés una corazonada secreta sobre cómo morirás?"
+    ]
+  },
+  {
+    name: 'Valores',
+    questions: [
+      "Cuando tenés un mal día, ¿qué te hace sentir mejor?",
+      "¿Cuáles son algunas de las cosas de mayor valor en su lista de deseos?",
+      "Si pudieras adquirir una cualidad o habilidad, ¿cuál sería?",
+      "¿Cuál creés que es tu mayor fortaleza en esta relación?",
+      "¿Qué es algo de tu vida que nunca cambiarías por otra persona, incluyéndome a mí?",
+      "¿Cuál es el lugar al que siempre has querido viajar?",
+      "¿Sueles seguir tu cabeza o tu corazón cuando tomas decisiones?",
+      "Si pudieras escribir una nota a tu yo más joven, ¿qué le dirías en solo cinco palabras?",
+      "¿Qué es lo único que te hace sentir vivo?",
+      "¿Crees que todo sucede por una razón, o simplemente encontramos razones después de que suceden las cosas?",
+      "¿Qué es para vos una relación sana?",
+      "¿Qué esperás aprender el próximo año?",
+      "Si pudieras cambiar algo sobre la forma en que te criaron, ¿cuál sería?",
+      "Si pudieras cambiar de vida con cualquiera, ¿a quién elegirías? ¿Y por qué?",
+      "¿Cuál creés que fue tu momento más vulnerable en nuestra relación?"
+    ]
+  },
+  {
+    name: 'Intimidad',
+    questions: [
+      "¿Cómo y qué aprendiste sobre el sexo mientras crecías?",
+      "¿Dónde te gusta y no te gusta que te toquen?",
+      "¿Cómo te sientes al ver porno?",
+      "¿Cuál es tu mayor fantasía?",
+      "¿Prefieres rapiditos o maratones?",
+      "¿Cuál es tu parte favorita de mi cuerpo?",
+      "¿Estás satisfecho con nuestra química e intimidad?",
+      "¿Qué aprendiste sobre tu cuerpo en el último año que podría hacer tu vida sexual más divertida?",
+      "¿En qué contexto te sientes más sexy?",
+      "¿Qué es lo que nunca has hecho y te gustaría probar?",
+      "¿Cuántas veces a la semana te gustaría tener sexo?",
+      "¿Qué es lo mejor de nuestra vida sexual?",
+      "¿Prefieres hacer el amor con las luces encendidas o en la oscuridad?",
+      "Como pareja, ¿cuáles son nuestras fortalezas y debilidades sexuales?",
+      "¿Cómo ves nuestra vida sexual cambiando a través de los años?"
+    ]
+  }
+];
+
+export default function Minijuego() {
+  const [catIdx, setCatIdx] = useState(0);
+  const [qIdx, setQIdx] = useState(0);
+  const [answers, setAnswers] = useState(categories.map(() => []));
+  const [input, setInput] = useState('');
+  const [finished, setFinished] = useState(false);
+
+  const handleNext = () => {
+    const updated = [...answers];
+    updated[catIdx].push(input.trim() || '—sin respuesta—');
+    setAnswers(updated);
+    setInput('');
+    if (qIdx + 1 < categories[catIdx].questions.length) {
+      setQIdx(qIdx + 1);
+    } else if (catIdx + 1 < categories.length) {
+      setCatIdx(catIdx + 1);
+      setQIdx(0);
+    } else {
+      setFinished(true);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleNext();
+    }
+  };
+
+  if (finished) {
+    return (
+      <Container className="minijuego-container">
+        <h1 className="text-center mb-4" style={{ color: 'var(--azul-oscuro)' }}>¡Juego completado!</h1>
+        {categories.map((cat, i) => (
+          <Card className="minijuego-card mb-4" key={i}>
+            <Card.Header className="minijuego-card-header">{cat.name}</Card.Header>
+            <ListGroup variant="flush">
+              {answers[i].map((resp, j) => (
+                <ListGroup.Item key={j}>
+                  <strong>Q{j+1}:</strong> {cat.questions[j]}
+                  <br />
+                  <em>R:</em> {resp}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Card>
+        ))}
+      </Container>
+    );
+  }
+
+  const cat = categories[catIdx];
+  const question = cat.questions[qIdx];
+
+  return (
+    <Container className="minijuego-container">
+      <h2 className="mb-3" style={{ color: 'var(--azul-oscuro)' }}>
+        {cat.name} <span style={{ color: 'var(--salmon)' }}>({qIdx + 1} / {categories[catIdx].questions.length})</span>
+      </h2>
+      <Card className="minijuego-card p-3 mb-3">
+        <Card.Text style={{ fontSize: '1.1rem', color: 'var(--azul-oscuro)' }}>
+          {question}
+        </Card.Text>
+        <Form.Control
+          as="textarea"
+          rows={2}
+          className="minijuego-input mb-3"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Escribí tu respuesta aquí..."
+        />
+        <Button variant="salmon" onClick={handleNext}>
+          {catIdx === categories.length - 1 && qIdx === categories[catIdx].questions.length - 1
+            ? 'Finalizar'
+            : 'Siguiente'}
+        </Button>
+      </Card>
+    </Container>
+  );
+}
