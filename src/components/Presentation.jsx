@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import doctoraImage from '../assets/doctora7.jpg';
 

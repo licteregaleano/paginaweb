@@ -1,11 +1,13 @@
 .servicios-section {
-  background-color: var(--blanco);
+  background-color: var(--secundario);
+  padding: 4rem 0;
 }
 
 .servicio-card {
   border: none;
-  border-top: 4px solid var(--salmon);
+  border-top: 4px solid var(--primario-claro);
   transition: transform 0.2s ease;
+  background-color: var(--blanco);
 }
 
 .servicio-card:hover {
@@ -13,5 +15,5 @@
 }
 
 .text-salmon {
-  color: var(--salmon);
+  color: var(--primario-claro);
 }

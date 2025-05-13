@@ -1,5 +1,7 @@
 import { Button } from 'react-bootstrap';
 import doctoraImage from '../assets/doctora1.jpg';
+import '../styles/hero.css';
+import { BiBorderRadius } from 'react-icons/bi';
 
 const Hero = () => {
   return (
@@ -9,18 +11,19 @@ const Hero = () => {
                       flex-column
                       align-items-center
                       flex-lg-row
-                      align-items-lg-start">
+                      align-items-lg-stretch">
         {/* Imagen */}
         <div className="hero-img
                         mb-4
                         mb-lg-0
                         mx-auto
                         mx-lg-0
-                        me-lg-5">
+                        me-lg-5
+                        align-self-lg-stretch">
           <img
             src={doctoraImage}
             alt="Doctora Teresa Galeano"
-            className="img-fluid rounded shadow"
+            className="hero-img__inner img-fluid rounded shadow"
           />
         </div>
 
