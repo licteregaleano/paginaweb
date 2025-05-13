@@ -1,0 +1,17 @@
+.servicios-section {
+  background-color: var(--blanco);
+}
+
+.servicio-card {
+  border: none;
+  border-top: 4px solid var(--salmon);
+  transition: transform 0.2s ease;
+}
+
+.servicio-card:hover {
+  transform: translateY(-5px);
+}
+
+.text-salmon {
+  color: var(--salmon);
+}

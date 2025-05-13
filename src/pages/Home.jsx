@@ -1,4 +1,5 @@
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import Servicios from '../components/Servicios';
 
 const Home = () => {
   return (
@@ -24,26 +25,7 @@ const Home = () => {
         </Col>
       </Row>
 
-      {/* Servicios destacados */}
-      <Row className="mb-5">
-        <Col>
-          <h2 className="text-center">Servicios</h2>
-        </Col>
-      </Row>
-      <Row className="mb-5">
-        <Col md={4}>
-          <h5>Tratamiento Individual</h5>
-          <p>Atención personalizada para abordar diversas problemáticas emocionales y psicológicas.</p>
-        </Col>
-        <Col md={4}>
-          <h5>Terapia de Parejas</h5>
-          <p>Sesiones enfocadas en mejorar la comunicación y resolver conflictos en la relación.</p>
-        </Col>
-        <Col md={4}>
-          <h5>Desarrollo Personal y Autoestima</h5>
-          <p>Herramientas y acompañamiento para fortalecer la confianza y el crecimiento personal.</p>
-        </Col>
-      </Row>
+      <Servicios />
 
       {/* Testimonios */}
       <Row className="mb-5" id="testimonios">
