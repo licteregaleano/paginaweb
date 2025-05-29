@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Container, Button, Form, Card, ListGroup } from 'react-bootstrap';
 
+// Límite gratuito de preguntas
+const FREE_LIMIT = 15;
+
+// Categorías y preguntas
 const categories = [
   {
     name: 'Divertidas',
@@ -111,11 +115,18 @@ export default function Minijuego() {
   const [input, setInput] = useState('');
   const [finished, setFinished] = useState(false);
 
+  // Total de preguntas respondidas hasta ahora
+  const totalAnswered = answers.reduce((sum, arr) => sum + arr.length, 0);
+
+  // Maneja avanzar de pregunta
   const handleNext = () => {
-    const updated = [...answers];
+    if (totalAnswered >= FREE_LIMIT) return; // bloquea si llegó al límite
+
+    const updated = answers.map(arr => [...arr]);
     updated[catIdx].push(input.trim() || '—sin respuesta—');
     setAnswers(updated);
     setInput('');
+
     if (qIdx + 1 < categories[catIdx].questions.length) {
       setQIdx(qIdx + 1);
     } else if (catIdx + 1 < categories.length) {
@@ -126,25 +137,37 @@ export default function Minijuego() {
     }
   };
 
-  const handleKeyDown = (e) => {
+  // Advance on Enter key
+  const handleKeyDown = e => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleNext();
     }
   };
 
+  // Paywall: mostrar cuando alcance el límite y no haya terminado
+  if (!finished && totalAnswered >= FREE_LIMIT) {
+    return (
+      <Container className="mt-5 text-center">
+        <h2>¡Has alcanzado el límite de preguntas gratuitas!</h2>
+        <p>Para continuar con todas las preguntas accede al juego completo.</p>
+        <Button variant="primary">Suscribirme</Button>
+      </Container>
+    );
+  }
+
+  // Vista de finalización del juego
   if (finished) {
     return (
-      <Container className="minijuego-container">
-        <h1 className="text-center mb-4" style={{ color: 'var(--azul-oscuro)' }}>¡Juego completado!</h1>
+      <Container className="mt-5">
+        <h1>¡Juego completado!</h1>
         {categories.map((cat, i) => (
-          <Card className="minijuego-card mb-4" key={i}>
-            <Card.Header className="minijuego-card-header">{cat.name}</Card.Header>
+          <Card className="mb-4" key={i}>
+            <Card.Header as="h5">{cat.name}</Card.Header>
             <ListGroup variant="flush">
               {answers[i].map((resp, j) => (
                 <ListGroup.Item key={j}>
-                  <strong>Q{j+1}:</strong> {cat.questions[j]}
-                  <br />
+                  <strong>Q{j + 1}:</strong> {cat.questions[j]}<br />
                   <em>R:</em> {resp}
                 </ListGroup.Item>
               ))}
@@ -155,33 +178,30 @@ export default function Minijuego() {
     );
   }
 
+  // Vista de pregunta activa
   const cat = categories[catIdx];
   const question = cat.questions[qIdx];
 
   return (
-    <Container className="minijuego-container">
-      <h2 className="mb-3" style={{ color: 'var(--azul-oscuro)' }}>
-        {cat.name} <span style={{ color: 'var(--salmon)' }}>({qIdx + 1} / {categories[catIdx].questions.length})</span>
-      </h2>
-      <Card className="minijuego-card p-3 mb-3">
-        <Card.Text style={{ fontSize: '1.1rem', color: 'var(--azul-oscuro)' }}>
-          {question}
-        </Card.Text>
+    <Container className="mt-5">
+      <h2>{cat.name} <span style={{ color: 'var(--primario-claro)'}}>({qIdx + 1} / {cat.questions.length})</span></h2>
+      <Card className="p-3 mb-3">
+        <Card.Text>{question}</Card.Text>
         <Form.Control
           as="textarea"
           rows={2}
-          className="minijuego-input mb-3"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Escribí tu respuesta aquí..."
         />
-        <Button variant="salmon" onClick={handleNext}>
-          {catIdx === categories.length - 1 && qIdx === categories[catIdx].questions.length - 1
-            ? 'Finalizar'
-            : 'Siguiente'}
-        </Button>
       </Card>
+      <Button variant="salmon" onClick={handleNext} className="me-3">
+        {catIdx === categories.length - 1 && qIdx === cat.questions.length - 1
+          ? 'Finalizar'
+          : 'Siguiente'}
+      </Button>
+      <p className="mt-3 text-muted">Preguntas gratuitas restantes: {Math.max(FREE_LIMIT - totalAnswered, 0)}</p>
     </Container>
   );
 }

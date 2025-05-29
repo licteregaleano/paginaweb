@@ -1,6 +1,6 @@
 .hero-section {
   position: relative;
-  min-height: 80vh;
+  min-height: 60vh;
   background: linear-gradient(
     135deg,
     var(--primario-oscuro) 0%,
