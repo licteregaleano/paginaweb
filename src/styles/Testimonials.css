@@ -1,0 +1,34 @@
+/* src/styles/Testimonials.css */
+.testimonials-section {
+    position: relative; /* para poder posicionar los controles respecto a este contenedor */
+}
+
+/* Flechas del carousel */
+.testimonials-section .carousel-control-prev,
+.testimonials-section .carousel-control-next {
+    width: 40px;                     /* ancho de las áreas clicables */
+    top: 50%;                        /* centrar verticalmente */
+    transform: translateY(-50%);     /* compensar el 50% */
+}
+
+/* Mover la flecha “prev” más a la izquierda */
+.testimonials-section .carousel-control-prev {
+    left: -20px;                     /* ajusta este valor según necesites */
+}
+
+/* Mover la flecha “next” más a la derecha */
+.testimonials-section .carousel-control-next {
+    right: -20px;                    /* ajusta este valor según necesites */
+}
+
+/* Acolchado horizontal en cada slide */
+.testimonials-section .carousel-item blockquote {
+    padding: 0 3rem;        /* 3rem a izquierda y derecha */
+}
+
+/* Opcional: para que el blockquote no se estire demasiado */
+.testimonials-section .carousel-item blockquote {
+    max-width: 800px;       /* ancho máximo del texto */
+    margin: 0 auto;         /* centrarlo */
+}
+

@@ -1,0 +1,33 @@
+.site-footer {
+    background-color: var(--primario-oscuro);
+    color: var(--blanco);
+}
+
+.site-footer h5 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.site-footer p,
+.site-footer a,
+.site-footer small {
+    color: var(--blanco);
+}
+
+.site-footer a {
+    text-decoration: none;
+    transition: text-decoration 0.2s;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
+
+.developer-credit {
+    color: var(--primario-claro);
+    text-decoration: none;
+    font-weight: 500;
+}
+.developer-credit:hover {
+    text-decoration: underline;
+}

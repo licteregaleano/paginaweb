@@ -7,6 +7,7 @@ import Servicios from './pages/Servicios';
 import Blog from './pages/Blog';
 import Contacto from './pages/Contacto';
 import Minijuego from './pages/Minijuego';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/minijuego" element={<Minijuego />} />
       </Routes>
+      <Footer />
     </>
   );
 }

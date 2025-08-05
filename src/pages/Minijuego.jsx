@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Button, Form, Card, ListGroup } from 'react-bootstrap';
+import { loadStripe} from '@stripe/stripe-js';
+import { useSearchParams } from 'react-router-dom';
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 // Límite gratuito de preguntas
 const FREE_LIMIT = 15;
 
@@ -109,24 +112,34 @@ const categories = [
 ];
 
 export default function Minijuego() {
+  const [searchParams] = useSearchParams();
+  const [isPaid, setIsPaid] = useState(false);
   const [catIdx, setCatIdx] = useState(0);
   const [qIdx, setQIdx] = useState(0);
   const [answers, setAnswers] = useState(categories.map(() => []));
   const [input, setInput] = useState('');
   const [finished, setFinished] = useState(false);
 
-  // Total de preguntas respondidas hasta ahora
+  // Detecta pago exitoso via ?paid=true
+  useEffect(() => {
+    if (searchParams.get('paid') === 'true') {
+      setIsPaid(true);
+    }
+  }, [searchParams]);
+
+  // Total de preguntas respondidas
   const totalAnswered = answers.reduce((sum, arr) => sum + arr.length, 0);
 
-  // Maneja avanzar de pregunta
   const handleNext = () => {
-    if (totalAnswered >= FREE_LIMIT) return; // bloquea si llegó al límite
+    // Bloquea más allá del límite si no pagó
+    if (totalAnswered >= FREE_LIMIT && !isPaid) return;
 
     const updated = answers.map(arr => [...arr]);
     updated[catIdx].push(input.trim() || '—sin respuesta—');
     setAnswers(updated);
     setInput('');
 
+    // Avanza pregunta o categoría
     if (qIdx + 1 < categories[catIdx].questions.length) {
       setQIdx(qIdx + 1);
     } else if (catIdx + 1 < categories.length) {
@@ -137,7 +150,6 @@ export default function Minijuego() {
     }
   };
 
-  // Advance on Enter key
   const handleKeyDown = e => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -145,18 +157,41 @@ export default function Minijuego() {
     }
   };
 
-  // Paywall: mostrar cuando alcance el límite y no haya terminado
-  if (!finished && totalAnswered >= FREE_LIMIT) {
+  // Inicia Stripe Checkout
+  const handleSubscribe = async () => {
+    const stripe = await stripePromise;
+    const res = await fetch('/api/create-checkout-session', { method: 'POST' });
+    const { id } = await res.json();
+    await stripe.redirectToCheckout({ sessionId: id });
+  };
+
+  // Paywall antes de terminar si no pagó
+  if (!finished && totalAnswered >= FREE_LIMIT && !isPaid) {
     return (
       <Container className="mt-5 text-center">
         <h2>¡Has alcanzado el límite de preguntas gratuitas!</h2>
-        <p>Para continuar con todas las preguntas accede al juego completo.</p>
-        <Button variant="primary">Suscribirme</Button>
+        <p>Realiza el pago para continuar con todo el juego completo.</p>
+        <Button variant="primary" onClick={handleSubscribe}>
+          Suscribirme USD 5
+        </Button>
       </Container>
     );
   }
 
-  // Vista de finalización del juego
+  // Descarga tras pago
+  if (isPaid && totalAnswered >= FREE_LIMIT) {
+    return (
+      <Container className="mt-5 text-center">
+        <h2>¡Gracias por suscribirte!</h2>
+        <p>Pulsa para descargar el juego completo:</p>
+        <a href="/Preguntas_Teresa_Completo.zip" download>
+          <Button variant="salmon">Descargar Minijuego Completo</Button>
+        </a>
+      </Container>
+    );
+  }
+
+  // Vista final al terminar todas las preguntas
   if (finished) {
     return (
       <Container className="mt-5">
@@ -184,7 +219,12 @@ export default function Minijuego() {
 
   return (
     <Container className="mt-5">
-      <h2>{cat.name} <span style={{ color: 'var(--primario-claro)'}}>({qIdx + 1} / {cat.questions.length})</span></h2>
+      <h2>
+        {cat.name}{' '}
+        <span style={{ color: 'var(--primario-claro)' }}>
+          ({qIdx + 1} / {cat.questions.length})
+        </span>
+      </h2>
       <Card className="p-3 mb-3">
         <Card.Text>{question}</Card.Text>
         <Form.Control
@@ -197,11 +237,13 @@ export default function Minijuego() {
         />
       </Card>
       <Button variant="salmon" onClick={handleNext} className="me-3">
-        {catIdx === categories.length - 1 && qIdx === cat.questions.length - 1
+        {catIdx === categories.length - 1 && qIdx === categories[catIdx].questions.length - 1
           ? 'Finalizar'
           : 'Siguiente'}
       </Button>
-      <p className="mt-3 text-muted">Preguntas gratuitas restantes: {Math.max(FREE_LIMIT - totalAnswered, 0)}</p>
+      <p className="mt-3 text-muted">
+        Preguntas gratuitas restantes: {Math.max(FREE_LIMIT - totalAnswered, 0)}
+      </p>
     </Container>
   );
 }

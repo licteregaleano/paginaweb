@@ -15,7 +15,7 @@ const Home = () => {
       <Testimonials />
 
       {/* Llamado a la acción */}
-      <Row className="text-center">
+      <Row className="text-center mb-5">
         <Col>
           <Button variant="salmon" size="lg" href="/contacto">
             Agendar una consulta
