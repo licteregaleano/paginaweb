@@ -9,7 +9,7 @@ const Footer = () => (
             <Row>
                 <Col md={3} className="mb-3 mb-md-0">
                     <h5>Contacto</h5>
-                    <p>Dra. Teresa Galeano</p>
+                    <p>Teresa Galeano</p>
                     <p>+595 981 123 456</p>
                     <p>contacto@teresagaleano.net</p>
                 </Col>

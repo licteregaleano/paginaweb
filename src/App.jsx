@@ -8,6 +8,7 @@ import Blog from './pages/Blog';
 import Contacto from './pages/Contacto';
 import Minijuego from './pages/Minijuego';
 import Footer from './components/Footer';
+import Post from "./pages/Post.jsx";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/minijuego" element={<Minijuego />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<Post />} />
       </Routes>
       <Footer />
     </>

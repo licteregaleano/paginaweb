@@ -1,0 +1,72 @@
+/* ===== Contraste en /blog (listado) ===== */
+.blog-section {
+    background: transparent;
+}
+
+.blog-card {
+    background: var(--primario-oscuro);              /* tarjetas claras */
+    color: var(--primario-claro);          /* texto púrpura oscuro */
+    border: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+}
+
+.blog-card .card-title,
+.blog-card .card-text {
+    color: var(--primario-oscuro);
+}
+
+.blog-card .text-muted {
+    color: #7a6f76;                         /* gris suave, legible sobre blanco */
+}
+
+/* Botón primario de tu paleta */
+.btn-salmon {
+    background: var(--primario-claro);
+    border: 1px solid var(--primario-claro);
+    color: var(--blanco);
+    transition: filter .2s ease, transform .02s ease;
+}
+.btn-salmon:hover {
+    filter: brightness(0.95);
+}
+.btn-salmon:active {
+    transform: translateY(1px);
+}
+
+/* ===== Contraste en /blog/:slug (detalle) ===== */
+.post-section {
+    background: var(--blanco);
+    color: var(--primario-oscuro);
+    min-height: 70vh;
+}
+
+.post-section h1,
+.post-section h2,
+.post-section h3 {
+    color: var(--primario-claro);               /* títulos en crema para resaltar */
+}
+
+.post-section .text-muted {
+    color: var(--secundario);               /* fecha en crema */
+}
+
+.post-content p,
+.post-content li {
+    line-height: 1.8;
+    color: var(--primario-oscuro);                   /* párrafos en blanco cálido */
+}
+
+.post-section a {
+    color: var(--primario-claro);           /* links coral */
+    text-decoration: none;
+}
+.post-section a:hover { text-decoration: underline; }
+
+/* Botón “Volver al blog” en fondo oscuro */
+.post-section .btn-salmon {
+    color: var(--blanco);
+}
+
+
+
