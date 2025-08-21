@@ -5,6 +5,12 @@ import { marked } from 'marked';
 import { getPostBySlug } from './postLoader';
 import '../styles/Blog.css';
 
+marked.setOptions({
+    gfm: true,
+    breaks: true,
+    headerIds: true,
+});
+
 export default function Post() {
     const { slug } = useParams();
     const post = getPostBySlug(slug);
