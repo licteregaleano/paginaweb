@@ -1,6 +1,7 @@
 /* ===== Contraste en /blog (listado) ===== */
 .blog-section {
     background: transparent;
+    min-height: 70vh;
 }
 
 .blog-card {
