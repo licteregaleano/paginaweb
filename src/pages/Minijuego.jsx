@@ -7,14 +7,229 @@ import { useEffect, useState } from "react";
 // Lee la PK del entorno (por ejemplo VITE_STRIPE_PK o VITE_STRIPE_KEY)
 const STRIPE_PK =
     import.meta.env.VITE_STRIPE_PK ?? import.meta.env.VITE_STRIPE_KEY ?? null;
-
 // Solo crea la promesa si existe una PK válida
 const stripePromise = STRIPE_PK ? loadStripe(STRIPE_PK) : null;
 
 // Límite gratuito de preguntas
 const FREE_LIMIT = 15;
 
-// Categorías y preguntas
+// --------------------- Generador de versión offline (ZIP) ---------------------
+function getOfflineFiles({ categories }) {
+    const title = "Juego para parejas - Versión Offline";
+
+    // SVG favicon/logo con colores del sitio y las iniciales "TG"
+    const svgLogo = `
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7A3E71"/>
+      <stop offset="100%" stop-color="#E76F51"/>
+    </linearGradient>
+  </defs>
+  <rect rx="28" ry="28" width="128" height="128" fill="url(#g)"/>
+  <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
+        font-family="Inter, Segoe UI, Arial" font-size="56" font-weight="800"
+        fill="#ffffff">TG</text>
+</svg>`.trim();
+    const faviconDataUrl = "data:image/svg+xml;utf8," + encodeURIComponent(svgLogo);
+
+    const html = `<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#4B2946" />
+  <title>${title}</title>
+  <link rel="icon" href="${faviconDataUrl}" sizes="any" />
+  <link rel="apple-touch-icon" href="${faviconDataUrl}" />
+  <meta property="og:title" content="${title}" />
+  <meta property="og:description" content="Versión offline del juego de preguntas para parejas." />
+  <meta property="og:image" content="${faviconDataUrl}" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="container">
+    <img class="brand" src="${faviconDataUrl}" alt="Logo Teresa Galeano" />
+    <h1>${title}</h1>
+    <div class="card">
+      <div class="row">
+        <label for="category">Categoría</label>
+        <select id="category" aria-label="Seleccionar categoría"></select>
+      </div>
+      <div class="row">
+        <div id="counter" class="muted"></div>
+      </div>
+      <div class="question" id="question" aria-live="polite"></div>
+      <textarea id="answer" rows="3" placeholder="Escribí tu respuesta aquí..." aria-label="Respuesta"></textarea>
+      <div class="actions">
+        <button id="prev" type="button">Anterior</button>
+        <button id="next" type="button">Siguiente</button>
+        <button id="export" type="button">Exportar respuestas (.txt)</button>
+      </div>
+    </div>
+    <p class="muted small">
+      Funciona 100% offline. Tus respuestas quedan en este navegador (no se suben a ningún lado).
+      Consejo: usá <strong>Ctrl/Cmd + Enter</strong> para avanzar.
+    </p>
+  </main>
+  <script src="./game.js"></script>
+</body>
+</html>`.trim();
+
+    // 🎨 estilos con colores de la web
+    const css = `
+:root{
+  --bg:#faf7f5;
+  --card:#ffffff;
+  --text:#2d2130;
+  --muted:#6c5a6f;
+  --primario-oscuro:#4B2946;
+  --primario-claro:#7A3E71;
+  --salmon:#E76F51;
+  --br:14px;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;padding:0;
+  background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif
+}
+.container{max-width:820px;margin:40px auto;padding:0 16px}
+.brand{width:56px;height:56px;border-radius:14px;display:block;margin:0 0 12px}
+h1{font-weight:800;letter-spacing:.2px;margin:0 0 20px;color:var(--primario-oscuro)}
+.card{background:var(--card);border-radius:var(--br);padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.07)}
+.row{margin:10px 0}
+label{display:block;font-weight:600;margin-bottom:6px;color:var(--primario-claro)}
+select,textarea,button{font:inherit}
+select,textarea{width:100%;padding:10px 12px;border:1px solid #e3dfe6;border-radius:10px;background:#fff}
+textarea{resize:vertical}
+.question{padding:12px 0;font-size:18px;font-weight:600;color:var(--primario-oscuro)}
+.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+button{padding:10px 14px;border:none;border-radius:10px;background:var(--primario-claro);color:white;cursor:pointer;transition:.2s}
+button#next{background:var(--salmon)}
+button:hover{opacity:.92}
+button:disabled{opacity:.6;cursor:not-allowed}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+`.trim();
+
+    // JS offline: lógica completa + persistencia local
+    const js = `
+// ---- Datos del juego (desde tu web) ----
+const CATEGORIES = ${JSON.stringify(categories, null, 2)};
+
+// ---- Estado ----
+let catIdx = 0;
+let qIdx = 0;
+let answers = CATEGORIES.map(() => []);
+
+// Restaurar desde localStorage si existe
+try {
+  const saved = JSON.parse(localStorage.getItem('minijuego_answers') || 'null');
+  const savedCat = Number(localStorage.getItem('minijuego_catIdx') || '0');
+  const savedQ = Number(localStorage.getItem('minijuego_qIdx') || '0');
+  if (Array.isArray(saved) && saved.length === CATEGORIES.length) {
+    answers = saved;
+    catIdx = isNaN(savedCat) ? 0 : savedCat;
+    qIdx = isNaN(savedQ) ? 0 : savedQ;
+  }
+} catch(e){ /* ignore */ }
+
+// ---- UI refs ----
+const $cat = document.getElementById('category');
+const $question = document.getElementById('question');
+const $answer = document.getElementById('answer');
+const $prev = document.getElementById('prev');
+const $next = document.getElementById('next');
+const $export = document.getElementById('export');
+const $counter = document.getElementById('counter');
+
+// Poblar categorías
+CATEGORIES.forEach((c, i) => {
+  const opt = document.createElement('option');
+  opt.value = i; opt.textContent = c.name;
+  $cat.appendChild(opt);
+});
+
+function persist(){
+  try {
+    localStorage.setItem('minijuego_answers', JSON.stringify(answers));
+    localStorage.setItem('minijuego_catIdx', String(catIdx));
+    localStorage.setItem('minijuego_qIdx', String(qIdx));
+  } catch(e){ /* ignore */ }
+}
+
+function render(){
+  $cat.value = String(catIdx);
+  const cat = CATEGORIES[catIdx];
+  const q = cat.questions[qIdx];
+  $question.textContent = q;
+  $answer.value = answers[catIdx][qIdx] ?? '';
+  $counter.textContent = \`\${cat.name} (\${qIdx+1} / \${cat.questions.length})\`;
+  $prev.disabled = (catIdx === 0 && qIdx === 0);
+  $next.textContent = (catIdx === CATEGORIES.length-1 && qIdx === cat.questions.length-1) ? 'Finalizar' : 'Siguiente';
+}
+
+$cat.addEventListener('change', e => {
+  catIdx = Number(e.target.value); qIdx = 0; persist(); render();
+});
+
+$prev.addEventListener('click', () => {
+  if (qIdx > 0) { qIdx--; }
+  else if (catIdx > 0) { catIdx--; qIdx = CATEGORIES[catIdx].questions.length - 1; }
+  persist(); render();
+});
+
+$next.addEventListener('click', () => {
+  const v = $answer.value.trim() || '—sin respuesta—';
+  answers[catIdx][qIdx] = v;
+  const cat = CATEGORIES[catIdx];
+  if (qIdx + 1 < cat.questions.length) qIdx++;
+  else if (catIdx + 1 < CATEGORIES.length) { catIdx++; qIdx = 0; }
+  else alert('¡Juego completado! Podés exportar tus respuestas.');
+  persist(); render();
+});
+
+$answer.addEventListener('input', () => {
+  // guardado en vivo
+  answers[catIdx][qIdx] = $answer.value;
+  persist();
+});
+
+$answer.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault(); $next.click();
+  }
+});
+
+// Exporta respuestas (.txt)
+$export.addEventListener('click', () => {
+  const lines = [];
+  CATEGORIES.forEach((cat, i) => {
+    lines.push('## ' + cat.name);
+    cat.questions.forEach((q, j) => {
+      const a = (answers[i] && answers[i][j]) ? answers[i][j] : '';
+      lines.push(\`Q\${j+1}. \${q}\\nR: \${a}\\n\`);
+    });
+    lines.push('');
+  });
+  const blob = new Blob([lines.join('\\n')], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'respuestas_minijuego.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+render();
+`.trim();
+
+    return { html, css, js };
+}
+// -----------------------------------------------------------------------------
+
+
+// --------------------------- Datos del juego web ------------------------------
 const categories = [
     {
         name: "Divertidas",
@@ -117,6 +332,8 @@ const categories = [
         ],
     },
 ];
+// -----------------------------------------------------------------------------
+
 
 export default function Minijuego() {
     const [searchParams] = useSearchParams();
@@ -176,22 +393,52 @@ export default function Minijuego() {
         }
         try {
             const stripe = await stripePromise;
-            const res = await fetch("/api/create-checkout-session", {
-                method: "POST",
-            });
-            if (!res.ok) {
-                throw new Error("No se pudo crear la sesión de pago.");
-            }
+            const res = await fetch("/api/create-checkout-session", { method: "POST" });
+            if (!res.ok) throw new Error("No se pudo crear la sesión de pago.");
             const { id } = await res.json();
             const { error } = await stripe.redirectToCheckout({ sessionId: id });
             if (error) throw error;
         } catch (err) {
             setPayError(
-                err?.message ??
-                "Ocurrió un problema iniciando el pago. Intenta de nuevo más tarde."
+                err?.message ?? "Ocurrió un problema iniciando el pago. Intenta de nuevo más tarde."
             );
         }
     };
+
+    // ----------------------- Descarga tras pago (ZIP offline) -------------------
+    if (isPaid && totalAnswered >= FREE_LIMIT) {
+        const handleDownloadOffline = async () => {
+            const [{ default: JSZip }, { saveAs }] = await Promise.all([
+                import("jszip"),
+                import("file-saver"),
+            ]);
+
+            const zip = new JSZip();
+            const { html, css, js } = getOfflineFiles({ categories });
+
+            zip.file("index.html", html);
+            zip.file("style.css", css);
+            zip.file("game.js", js);
+
+            const blob = await zip.generateAsync({ type: "blob" });
+            saveAs(blob, "Minijuego_Offline.zip");
+        };
+
+        return (
+            <Container className="mt-5 text-center">
+                <h2>¡Gracias por suscribirte!</h2>
+                <p>Descargá la versión <strong>offline</strong> del minijuego (funciona sin internet):</p>
+                <Button variant="salmon" onClick={handleDownloadOffline}>
+                    Descargar Minijuego Offline (.zip)
+                </Button>
+                <p className="mt-3 text-muted">
+                    Incluye <code>index.html</code>, <code>style.css</code> y <code>game.js</code>.
+                    Abrí <strong>index.html</strong> y jugá sin conexión.
+                </p>
+            </Container>
+        );
+    }
+    // ---------------------------------------------------------------------------
 
     // Paywall antes de terminar si no pagó
     if (!finished && totalAnswered >= FREE_LIMIT && !isPaid) {
@@ -206,23 +453,10 @@ export default function Minijuego() {
 
                 {!stripePromise && (
                     <p className="mt-3 text-warning">
-                        (Modo dev) Stripe no está configurado
+                        (Modo dev) Stripe no está configurado: agregá <code>VITE_STRIPE_PK</code> o <code>VITE_STRIPE_KEY</code>.
                     </p>
                 )}
                 {payError && <p className="mt-2 text-danger">{payError}</p>}
-            </Container>
-        );
-    }
-
-    // Descarga tras pago
-    if (isPaid && totalAnswered >= FREE_LIMIT) {
-        return (
-            <Container className="mt-5 text-center">
-                <h2>¡Gracias por suscribirte!</h2>
-                <p>Pulsa para descargar el juego completo:</p>
-                <a href="/Preguntas_Teresa_Completo.zip" download>
-                    <Button variant="salmon">Descargar Minijuego Completo</Button>
-                </a>
             </Container>
         );
     }

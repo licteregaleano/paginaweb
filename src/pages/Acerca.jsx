@@ -5,7 +5,7 @@ import '../styles/Acerca.css';
 
 const SobreMi = () => (
   <Container className="mt-5">
-    <h1>Quién soy</h1>
+    <h1 className="titulo-sobremi">Quién soy</h1>
 
     {/* SOBRE MÍ */}
     <section className="mb-5">

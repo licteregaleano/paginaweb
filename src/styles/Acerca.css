@@ -1,5 +1,6 @@
-h1{
+.titulo-sobremi {
     color: var(--primario-claro);
+    padding-bottom: 2rem;
 }
 
 h2{
