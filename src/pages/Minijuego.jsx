@@ -206,9 +206,7 @@ export default function Minijuego() {
 
                 {!stripePromise && (
                     <p className="mt-3 text-warning">
-                        (Modo dev) Stripe no está configurado: agrega{" "}
-                        <code>VITE_STRIPE_PK</code> o <code>VITE_STRIPE_KEY</code> en tu
-                        <code>.env.local</code>.
+                        (Modo dev) Stripe no está configurado
                     </p>
                 )}
                 {payError && <p className="mt-2 text-danger">{payError}</p>}

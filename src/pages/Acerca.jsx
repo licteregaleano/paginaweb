@@ -1,6 +1,7 @@
 // src/pages/SobreMi.jsx
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import '../styles/Acerca.css';
 
 const SobreMi = () => (
   <Container className="mt-5">

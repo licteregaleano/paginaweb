@@ -2,7 +2,7 @@
 title: "El amor es para valientes que arriesgan"
 date: "2017-02-24"
 excerpt: "Reflexión sobre el amor y la valentía"
-tags: ["amor"]
+tags: ["amor", "parejas"]
 ---
 > No existe hombre tan cobarde como para que el amor no pueda hacerlo valiente y transformarlo en héroe.
 >Platón
