@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Alert, Card } from "react-bootstrap";
 import siteConfig from "../siteConfig";
 
-export default function Contact() {
+export default function Contacto() {
     const [loading, setLoading] = useState(false);
     const [ok, setOk] = useState(false);
     const [err, setErr] = useState("");
@@ -18,14 +18,14 @@ export default function Contact() {
 
         const form = new FormData(e.currentTarget);
 
-        // Honeypot (campo oculto). Si viene con valor => bot.
+        // Honeypot
         if (form.get("company")) {
             setErr("Error de validación.");
             setLoading(false);
             return;
         }
 
-        // Time trap (si envió en < 3s, probablemente bot)
+        // Time trap
         const elapsed = (Date.now() - startedAtRef.current) / 1000;
         if (elapsed < 3) {
             setErr("Por favor, completá el formulario.");
@@ -36,13 +36,14 @@ export default function Contact() {
         // Campos útiles para Formspree
         form.set("_subject", `Nuevo mensaje: ${form.get("subject") || "Contacto Web"}`);
         form.set("_replyto", form.get("email") || "");
-        form.set("_gotcha", ""); // compat clásico (opcional)
+        form.set("_gotcha", "");
 
         try {
+            // 👇 OJO: backticks (template string)
             const endpoint = `https://formspree.io/f/${siteConfig.formspreeId}`;
             const res = await fetch(endpoint, {
                 method: "POST",
-                headers: { "Accept": "application/json" },
+                headers: { Accept: "application/json" },
                 body: form,
             });
 
@@ -52,8 +53,8 @@ export default function Contact() {
             }
 
             setOk(true);
-            (e.target).reset();
-            startedAtRef.current = Date.now(); // reset para nuevo envío
+            e.currentTarget.reset();
+            startedAtRef.current = Date.now();
         } catch (e) {
             setErr(e.message || "Error al enviar. Intentá de nuevo.");
         } finally {
@@ -81,39 +82,40 @@ export default function Contact() {
                     <Col md={7}>
                         <Card className="p-4">
                             <Form onSubmit={handleSubmit} noValidate>
-                                {/* Honeypot (oculto) */}
+                                {/* Honeypot oculto */}
                                 <Form.Group className="d-none" controlId="company">
-                                    <Form.Label>Empresa</Form.Label>
-                                    <Form.Control name="company" autoComplete="off" tabIndex={-1} />
+                                    <label className="form-label" htmlFor="company">Empresa</label>
+                                    <Form.Control id="company" name="company" autoComplete="off" tabIndex={-1} />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="name">
-                                    <Form.Label>Nombre y apellido</Form.Label>
-                                    <Form.Control name="name" required placeholder="Tu nombre" />
+                                    <label className="form-label" htmlFor="name">Nombre y apellido</label>
+                                    <Form.Control id="name" name="name" required placeholder="Tu nombre" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="email">
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control name="email" type="email" required placeholder="tu@email.com" />
+                                    <label className="form-label" htmlFor="email">Email</label>
+                                    <Form.Control id="email" name="email" type="email" required placeholder="tu@email.com" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="phone">
-                                    <Form.Label>Teléfono (opcional)</Form.Label>
-                                    <Form.Control name="phone" placeholder="+595 ..." />
+                                    <label className="form-label" htmlFor="phone">Teléfono (opcional)</label>
+                                    <Form.Control id="phone" name="phone" placeholder="+595 ..." />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="subject">
-                                    <Form.Label>Asunto</Form.Label>
-                                    <Form.Control name="subject" required placeholder="Motivo de tu consulta" />
+                                    <label className="form-label" htmlFor="subject">Asunto</label>
+                                    <Form.Control id="subject" name="subject" required placeholder="Motivo de tu consulta" />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="message">
-                                    <Form.Label>Mensaje</Form.Label>
-                                    <Form.Control as="textarea" rows={5} name="message" required placeholder="Contame brevemente..." />
+                                    <label className="form-label" htmlFor="message">Mensaje</label>
+                                    <Form.Control id="message" as="textarea" rows={5} name="message" required placeholder="Contame brevemente..." />
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="consent">
                                     <Form.Check
+                                        id="consent"
                                         name="consent"
                                         required
                                         label={<>Acepto la <a href={siteConfig.privacyUrl}>política de privacidad</a>.</>}

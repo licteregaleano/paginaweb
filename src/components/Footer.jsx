@@ -12,11 +12,13 @@ export default function Footer() {
                         <h5 style={{ color: "var(--primario-oscuro)" }}>{siteConfig.brand}</h5>
                         <p className="mb-1"><strong>Email:</strong> <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></p>
                         <p className="mb-1"><strong>Tel:</strong> <a href={`tel:${siteConfig.phone}`}>{siteConfig.phone}</a></p>
-                        <p className="mb-1"><strong>Dirección:</strong>{" "}
+                        <p className="mb-1">
+                            <strong>Dirección:</strong>{" "}
                             <a href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">{siteConfig.address}</a>
                         </p>
                         <p className="mb-0"><strong>Horario:</strong> {siteConfig.hours}</p>
                     </Col>
+
                     <Col md={3}>
                         <h6 style={{ color: "var(--primario-claro)" }}>Enlaces</h6>
                         <ul className="list-unstyled">
@@ -25,6 +27,7 @@ export default function Footer() {
                             <li><a href={siteConfig.privacyUrl}>Privacidad</a></li>
                         </ul>
                     </Col>
+
                     <Col md={3}>
                         <h6 style={{ color: "var(--primario-claro)" }}>Seguime</h6>
                         <ul className="list-unstyled">
@@ -35,17 +38,21 @@ export default function Footer() {
                         </ul>
                     </Col>
                 </Row>
+
                 <hr />
                 <div className="d-flex justify-content-between small">
                     <span>© {year} {siteConfig.brand}. Todos los derechos reservados.</span>
-                    <span>Hecho con ❤️ en Paraguay por <a
-                        href="https://portfolio-fedebarriosd.vercel.app/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="developer-credit"
-                    >
-                        Fede Barrios
-                    </a></span>
+                    <span>
+            Hecho con ❤️ en Paraguay por{" "}
+                        <a
+                            href="https://portfolio-fedebarriosd.vercel.app/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="developer-credit"
+                        >
+              Fede Barrios
+            </a>
+          </span>
                 </div>
             </Container>
         </footer>

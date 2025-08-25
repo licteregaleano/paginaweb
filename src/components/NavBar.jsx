@@ -3,7 +3,7 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 
 const NavBar = () => {
   return (
-    <Navbar bg="light" expand="lg" sticky="top">
+    <Navbar className="navbar-main" data-bs-theme="dark" expand="lg" sticky="top">
       <Container>
         <Navbar.Brand as={Link} to="/">Teresa Galeano</Navbar.Brand>
         <Navbar.Toggle aria-controls="main-navbar" />

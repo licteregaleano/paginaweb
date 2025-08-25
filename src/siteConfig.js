@@ -9,8 +9,7 @@ const siteConfig = {
     privacyUrl: "/privacidad",
     bookingUrl: "",
 
-    // 👇 ID de Formspree (solo el sufijo)
-    formspreeId: "abcde123",
+    formspreeId: "mwpnerwg",
 
     social: {
         instagram: "https://instagram.com/tu_usuario",
