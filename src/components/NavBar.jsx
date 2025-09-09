@@ -1,9 +1,16 @@
+// src/components/NavBar.jsx
 import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 
 const NavBar = () => {
   return (
-    <Navbar className="navbar-main" data-bs-theme="dark" expand="lg" sticky="top">
+    <Navbar
+      bg="light"
+      expand="lg"
+      sticky="top"
+      className="navbar-main"
+      data-bs-theme="dark"     // ayuda con contraste en dark
+    >
       <Container>
         <Navbar.Brand as={Link} to="/">Teresa Galeano</Navbar.Brand>
         <Navbar.Toggle aria-controls="main-navbar" />

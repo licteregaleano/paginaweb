@@ -10,6 +10,9 @@ import Minijuego from './pages/Minijuego';
 import Footer from './components/Footer';
 import Post from "./pages/Post.jsx";
 
+import "./styles/animaciones.css";
+
+
 function App() {
   return (
     <>

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Container, Row, Col, Form, Button, Alert, Card } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Alert, Card, Ratio } from "react-bootstrap";
+import { FaInstagram, FaFacebook } from "react-icons/fa";
 import siteConfig from "../siteConfig";
+import "../styles/Contact.css";
 
 export default function Contacto() {
     const [loading, setLoading] = useState(false);
@@ -33,25 +35,18 @@ export default function Contacto() {
             return;
         }
 
-        // Campos útiles para Formspree
+        // Campos Formspree
         form.set("_subject", `Nuevo mensaje: ${form.get("subject") || "Contacto Web"}`);
         form.set("_replyto", form.get("email") || "");
         form.set("_gotcha", "");
 
         try {
-            // 👇 OJO: backticks (template string)
             const endpoint = `https://formspree.io/f/${siteConfig.formspreeId}`;
-            const res = await fetch(endpoint, {
-                method: "POST",
-                headers: { Accept: "application/json" },
-                body: form,
-            });
-
+            const res = await fetch(endpoint, { method: "POST", headers: { Accept: "application/json" }, body: form });
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
                 throw new Error(data?.errors?.[0]?.message || "No se pudo enviar el mensaje.");
             }
-
             setOk(true);
             e.currentTarget.reset();
             startedAtRef.current = Date.now();
@@ -72,13 +67,12 @@ export default function Contacto() {
                 <Row className="mb-4">
                     <Col>
                         <h1 style={{ color: "var(--primario-claro)" }}>Contacto</h1>
-                        <p className="text-muted">
-                            Escribime para consultas, turnos o prensa. Te responderé a la brevedad.
-                        </p>
+                        <p className="text-muted">Escribime para consultas, turnos o prensa. Te responderé a la brevedad.</p>
                     </Col>
                 </Row>
 
                 <Row className="g-4">
+                    {/* FORMULARIO */}
                     <Col md={7}>
                         <Card className="p-4">
                             <Form onSubmit={handleSubmit} noValidate>
@@ -113,19 +107,10 @@ export default function Contacto() {
                                     <Form.Control id="message" as="textarea" rows={5} name="message" required placeholder="Contame brevemente..." />
                                 </Form.Group>
 
-                                <Form.Group className="mb-3" controlId="consent">
-                                    <Form.Check
-                                        id="consent"
-                                        name="consent"
-                                        required
-                                        label={<>Acepto la <a href={siteConfig.privacyUrl}>política de privacidad</a>.</>}
-                                    />
-                                </Form.Group>
-
                                 {ok && <Alert variant="success">¡Gracias! Tu mensaje fue enviado.</Alert>}
                                 {err && <Alert variant="danger">{err}</Alert>}
 
-                                <div className="d-flex gap-3">
+                                <div className="d-flex gap-3 flex-wrap">
                                     <Button type="submit" variant="salmon" disabled={loading}>
                                         {loading ? "Enviando..." : "Enviar mensaje"}
                                     </Button>
@@ -142,25 +127,64 @@ export default function Contacto() {
                         </Card>
                     </Col>
 
+                    {/* PANEL DERECHO: INFO + MAPA + REDES */}
                     <Col md={5}>
                         <Card className="p-4 h-100">
                             <h5 className="mb-3" style={{ color: "var(--primario-oscuro)" }}>Información</h5>
+
                             <p className="mb-1"><strong>Email:</strong> <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></p>
                             <p className="mb-1"><strong>Teléfono:</strong> <a href={`tel:${siteConfig.phone}`}>{siteConfig.phone}</a></p>
                             <p className="mb-1"><strong>Dirección:</strong> <a href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">{siteConfig.address}</a></p>
                             <p className="mb-3"><strong>Horario:</strong> {siteConfig.hours}</p>
 
-                            {siteConfig.mapsUrl && (
-                                <a className="btn btn-outline-secondary mb-3" href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">
-                                    Ver en Google Maps
-                                </a>
+                            {/* EMBED MAPS (responsive). Si no hay embed, mostramos el botón. */}
+                            {siteConfig.mapsEmbedSrc ? (
+                                <div className="rounded overflow-hidden shadow-sm mb-3">
+                                    <Ratio aspectRatio="16x9">
+                                        <iframe
+                                            src={siteConfig.mapsEmbedSrc}
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                            title="Ubicación en Google Maps"
+                                        />
+                                    </Ratio>
+                                </div>
+                            ) : (
+                                siteConfig.mapsUrl && (
+                                    <a className="btn btn-outline-secondary mb-3" href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">
+                                        Ver en Google Maps
+                                    </a>
+                                )
                             )}
 
-                            <div className="d-flex gap-3 flex-wrap">
-                                {siteConfig.social.instagram && <a href={siteConfig.social.instagram} target="_blank" rel="noreferrer">Instagram</a>}
-                                {siteConfig.social.facebook && <a href={siteConfig.social.facebook} target="_blank" rel="noreferrer">Facebook</a>}
-                                {siteConfig.social.youtube && <a href={siteConfig.social.youtube} target="_blank" rel="noreferrer">YouTube</a>}
-                                {siteConfig.social.linkedin && <a href={siteConfig.social.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>}
+                            {/* CTA redes: más llamativos y anchos */}
+                            <div className="row g-2">
+                                {siteConfig.social.instagram && (
+                                    <div className="col-12 col-sm-6">
+                                        <a
+                                            href={siteConfig.social.instagram}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="btn btn-salmon w-100 d-flex align-items-center justify-content-center"
+                                        >
+                                            <FaInstagram className="me-2" /> Instagram
+                                        </a>
+                                    </div>
+                                )}
+                                {siteConfig.social.facebook && (
+                                    <div className="col-12 col-sm-6">
+                                        <a
+                                            href={siteConfig.social.facebook}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="btn btn-facebook w-100 d-flex align-items-center justify-content-center"
+                                        >
+                                            <FaFacebook className="me-2" /> Facebook
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </Card>
                     </Col>

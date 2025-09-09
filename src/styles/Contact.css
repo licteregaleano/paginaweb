@@ -1,1 +1,12 @@
 .contact-title { color: var(--primario-claro); margin-bottom: 1rem; }
+
+.btn.btn-facebook {
+    background-color: #1877f2;
+    color: var(--blanco);
+    border: none;
+    transition: background-color 0.2s ease;
+}
+.btn.btn-facebook:hover {
+    background-color: #145dbf;
+    color: var(--blanco);
+}

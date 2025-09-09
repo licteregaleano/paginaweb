@@ -20,16 +20,15 @@ export default function Footer() {
                     </Col>
 
                     <Col md={3}>
-                        <h6 style={{ color: "var(--primario-claro)" }}>Enlaces</h6>
+                        <h6 style={{ color: "var(--primario-oscuro)" }}>Enlaces</h6>
                         <ul className="list-unstyled">
                             <li><a href="/contacto">Contacto</a></li>
                             <li><a href="/blog">Blog</a></li>
-                            <li><a href={siteConfig.privacyUrl}>Privacidad</a></li>
                         </ul>
                     </Col>
 
                     <Col md={3}>
-                        <h6 style={{ color: "var(--primario-claro)" }}>Seguime</h6>
+                        <h6 style={{ color: "var(--primario-oscuro)" }}>Seguime</h6>
                         <ul className="list-unstyled">
                             {siteConfig.social.instagram && <li><a href={siteConfig.social.instagram} target="_blank" rel="noreferrer">Instagram</a></li>}
                             {siteConfig.social.facebook && <li><a href={siteConfig.social.facebook} target="_blank" rel="noreferrer">Facebook</a></li>}

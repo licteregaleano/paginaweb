@@ -1,0 +1,45 @@
+/* Base revelado */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+            opacity .6s ease,
+            transform .6s ease;
+    transition-delay: var(--d, 0ms); /* soporte para "stagger" con --d */
+    will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Variantes (opcionales) */
+.reveal.fade-up { transform: translateY(24px); }
+.reveal.slide-left { transform: translateX(28px); }
+.reveal.slide-right { transform: translateX(-28px); }
+.reveal.pop { transform: scale(.98); }
+
+/* Hover sutil para cards / CTA */
+.card.lift,
+.servicio-card.lift,
+.btn-salmon.lift {
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.card.lift:hover,
+.servicio-card.lift:hover,
+.btn-salmon.lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+
+/* Respeta reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .card.lift,
+    .servicio-card.lift,
+    .btn-salmon.lift {
+        transition: none !important;
+        transform: none !important;
+    }
+}

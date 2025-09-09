@@ -1,19 +1,95 @@
-.servicios-section {
-  background-color: var(--secundario);
-  padding: 4rem 0;
+/* Contenedor del encabezado */
+.services-header p {
+  max-width: 760px;
+  margin: 0 auto;
 }
 
+/* Pills de navegación interna */
+.btn-light-pill {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.95rem;
+  color: var(--primario-oscuro);
+  transition: .2s ease;
+}
+.btn-light-pill:hover {
+  background: var(--blanco);
+  border-color: #ddd;
+  transform: translateY(-1px);
+}
+
+/* Bloques */
+.service-block {
+  margin-bottom: 3rem;
+}
+@media (min-width: 992px) {
+  .service-block {
+    margin-bottom: 4rem;
+  }
+}
+
+/* Ilustración con fallback degradado si la imagen no existe */
+.service-illustration {
+  min-height: 260px;
+  background: linear-gradient(135deg, var(--primario-oscuro), var(--primario-claro));
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+@media (min-width: 768px) {
+  .service-illustration { min-height: 320px; }
+}
+@media (min-width: 1200px) {
+  .service-illustration { min-height: 360px; }
+}
+
+/* Nota de foto sugerida */
+.photo-hint {
+  margin-left: 2px;
+}
+
+/* ===== Animations (usa la misma convención que tu hook useReveal) ===== */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+.fade-up { }
+
+/* Link reseteado para la card */
+.servicio-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Card */
 .servicio-card {
-  border: none;
-  border-top: 4px solid var(--primario-claro);
-  transition: transform 0.2s ease;
-  background-color: var(--blanco);
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow .2s ease, transform .2s ease;
 }
 
-.servicio-card:hover {
-  transform: translateY(-5px);
+/* Mini-thumbnail de cabecera (16:9) con fallback degradado si no carga */
+.servicio-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background:
+    linear-gradient(135deg, var(--primario-oscuro), var(--primario-claro));
+  background-position: center;
+  background-size: cover;
 }
 
-.text-salmon {
-  color: var(--primario-claro);
+/* Hover sutil (ya usás .lift, lo reforzamos) */
+.servicio-card.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* Animaciones base compatibles con useReveal */
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+.servicios-section .row{
+  row-gap: 1.5rem;
 }
