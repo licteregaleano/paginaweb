@@ -23,7 +23,10 @@ function App() {
         <Route path="/servicios" element={<Servicios />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contacto" element={<Contacto />} />
-        <Route path="/minijuego" element={<Minijuego />} />
+        <Route 
+          path="/minijuego" 
+          element={<div style={{ padding: "2rem" }}>El juego estará disponible próximamente.</div>}
+        />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<Post />} />
       </Routes>
