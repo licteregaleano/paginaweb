@@ -23,6 +23,8 @@
 /* Bloques */
 .service-block {
   margin-bottom: 3rem;
+  padding: 1.25rem;
+  border-radius: 16px;
 }
 @media (min-width: 992px) {
   .service-block {
@@ -53,7 +55,6 @@
 /* ===== Animations (usa la misma convención que tu hook useReveal) ===== */
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.is-visible { opacity: 1; transform: none; }
-.fade-up { }
 
 /* Link reseteado para la card */
 .servicio-link {
@@ -92,4 +93,15 @@
 
 .servicios-section .row{
   row-gap: 1.5rem;
+}
+
+/* Color de fondo alterno (suave, acorde a tu paleta cálida) */
+.service-block--alt {
+  background-color: var(--secundario);
+  border: 1px solid #eee;
+}
+
+/* Asegura que la imagen respete el radio */
+.service-block--alt .service-illustration {
+  border-radius: 12px;         /* ligeramente menor para ver el bloque detrás */
 }

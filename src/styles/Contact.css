@@ -33,3 +33,20 @@
   opacity: 0.9;
   color: #fff !important;
 }
+
+.btn.btn-youtube {
+  background: #ff0000;
+  background: linear-gradient(45deg, #ff4d4d 0%, #ff0000 50%, #cc0000 100%);
+  color: #fff;
+  border: none;
+  transition: opacity .2s ease-in-out;
+}
+.btn.btn-youtube:hover { opacity: .9; color: #fff; }
+
+.btn.btn-linkedin {
+  background-color: #0a66c2;
+  color: #fff;
+  border: none;
+  transition: background-color .2s ease-in-out, opacity .2s ease-in-out;
+}
+.btn.btn-linkedin:hover { background-color: #084f99; color: #fff; }

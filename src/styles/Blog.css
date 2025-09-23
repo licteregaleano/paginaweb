@@ -79,4 +79,58 @@
 }
 .post-content blockquote p { margin: 0; }
 
+/* ===== Masonry layout ===== */
+.masonry {
+  column-gap: 1.25rem;           /* espacio entre columnas */
+  column-fill: balance;          /* reparte alto lo mejor posible */
+}
 
+/* columnas por breakpoint */
+@media (min-width: 0px)   { .masonry { column-count: 1; } }
+@media (min-width: 576px) { .masonry { column-count: 2; } }
+@media (min-width: 992px) { .masonry { column-count: 3; } }
+/* si querés 4 en muy grande:
+@media (min-width: 1400px) { .masonry { column-count: 4; } }
+*/
+
+.masonry-item {
+  break-inside: avoid;           /* clave para que no se corten las cards */
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  display: inline-block;         /* para que respete el flujo de columnas */
+  width: 100%;
+  margin: 0 0 1.25rem;           /* espacio vertical entre tarjetas */
+}
+
+/* ===== Card styling ===== */
+.blog-card {
+  border: 1px solid #eee;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: box-shadow .2s ease, transform .2s ease;
+  background-color: #fff;        /* contraste dentro del masonry */
+}
+
+.blog-card.lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.08);
+}
+
+/* Título un poco más marcado */
+.blog-card .card-title {
+  color: var(--primario-oscuro);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Ajuste visual del badge */
+.blog-card .badge {
+  background-color: #e9e7ef !important;
+  color: #4b2948;
+  font-weight: 600;
+}
+
+/* Sección general */
+.blog-section {
+  background: var(--blanco);
+}

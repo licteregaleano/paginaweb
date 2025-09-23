@@ -1,10 +1,9 @@
-// src/pages/Servicios.jsx
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import useReveal from "../hooks/useReveal";
 import "../styles/Servicios.css";
 
-function ServiceBlock({ item, reverse }) {
+function ServiceBlock({ item, reverse, altBg }) {
   const imgRev = useReveal({ threshold: 0.2 });
   const txtRev = useReveal({ threshold: 0.2 });
 
@@ -14,21 +13,18 @@ function ServiceBlock({ item, reverse }) {
   return (
     <Row
       id={item.id}
-      className={`service-block align-items-center g-4 ${
-        reverse ? "flex-md-row-reverse" : ""
+      className={`service-block align-items-center g-4 ${reverse ? "flex-md-row-reverse" : ""} ${
+        altBg ? "service-block--alt" : ""
       }`}
     >
       <Col md={6}>
         <div
           ref={imgRev.ref}
-          className={`service-illustration reveal fade-up ${
-            imgRev.visible ? "is-visible" : ""
-          } rounded shadow-sm`}
+          className={`service-illustration reveal fade-up ${imgRev.visible ? "is-visible" : ""} rounded shadow-sm`}
           style={{ backgroundImage: `url('${bgUrl}')` }}
           role="img"
           aria-label={item.photoAlt}
         />
-        
       </Col>
 
       <Col md={6}>
@@ -135,7 +131,7 @@ export default function ServiciosPage() {
             de tu proceso.
           </p>
 
-          {/* Navegación interna */}
+        {/* Navegación interna */}
           <ul className="services-nav list-unstyled d-flex gap-2 flex-wrap justify-content-center mt-3">
             {data.map((s) => (
               <li key={s.id}>
@@ -147,9 +143,14 @@ export default function ServiciosPage() {
           </ul>
         </header>
 
-        {/* Bloques */}
+        {/* Bloques: alternamos layout y fondo en el mismo patrón */}
         {data.map((item, i) => (
-          <ServiceBlock key={item.id} item={item} reverse={i % 2 === 1} />
+          <ServiceBlock
+            key={item.id}
+            item={item}
+            reverse={i % 2 === 1}
+            altBg={i % 2 === 1}   // <- mismos “pares” que van a la derecha
+          />
         ))}
 
         {/* CTA final */}

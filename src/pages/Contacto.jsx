@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Container, Row, Col, Form, Button, Alert, Card, Ratio } from "react-bootstrap";
-import { FaInstagram, FaFacebook } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
 import siteConfig from "../siteConfig";
 import "../styles/Contact.css";
 
@@ -21,7 +21,8 @@ export default function Contacto() {
     setOk(false);
     setErr("");
 
-    const form = new FormData(e.currentTarget);
+    const formEl = e.currentTarget; // <form>
+    const form = new FormData(formEl);
 
     // Honeypot
     if (form.get("company")) {
@@ -54,8 +55,9 @@ export default function Contacto() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data?.errors?.[0]?.message || "No se pudo enviar el mensaje.");
       }
+
       setOk(true);
-      e.currentTarget.reset();
+      formEl.reset();
       startedAtRef.current = Date.now();
     } catch (e) {
       setErr(e.message || "Error al enviar. Intentá de nuevo.");
@@ -64,40 +66,45 @@ export default function Contacto() {
     }
   }
 
-  // ---- WhatsApp con datos del formulario ----
+  // ---- WhatsApp: solo manda texto si hay datos en el formulario ----
   function handleWhatsApp(e) {
     e.preventDefault();
 
     const formEl = formRef.current;
-    if (!formEl) return;
+    const waNumber = String(siteConfig.whatsapp || "").replace(/\D+/g, "");
+    if (!waNumber) {
+      alert("Número de WhatsApp no configurado.");
+      return;
+    }
+
+    if (!formEl) {
+      window.open(`https://wa.me/${waNumber}`, "_blank", "noopener,noreferrer");
+      return;
+    }
 
     const data = new FormData(formEl);
-
     const name = (data.get("name") || "").trim();
     const email = (data.get("email") || "").trim();
     const phone = (data.get("phone") || "").trim();
     const subject = (data.get("subject") || "").trim();
     const message = (data.get("message") || "").trim();
 
-    // Texto a enviar
-    const texto = `
-Nuevo contacto desde la web:
+    const hasAny =
+      name.length > 0 || email.length > 0 || phone.length > 0 || subject.length > 0 || message.length > 0;
 
-👤 Nombre: ${name}
-📧 Email: ${email}
-📱 Tel: ${phone}
-📌 Asunto: ${subject}
-
-💬 Mensaje:
-${message}
-`.trim();
-
-    // WhatsApp: solo dígitos, sin + ni espacios
-    const waNumber = String(siteConfig.whatsapp || "").replace(/\D+/g, "");
-    if (!waNumber) {
-      alert("Número de WhatsApp no configurado.");
+    if (!hasAny) {
+      window.open(`https://wa.me/${waNumber}`, "_blank", "noopener,noreferrer");
       return;
     }
+
+    const parts = ["Nuevo contacto desde la web:"];
+    if (name) parts.push(`\nNombre: ${name}`);
+    if (email) parts.push(`\nEmail: ${email}`);
+    if (phone) parts.push(`\nTel: ${phone}`);
+    if (subject) parts.push(`\nAsunto: ${subject}`);
+    if (message) parts.push(`\n\nMensaje:\n${message}`);
+
+    const texto = parts.join("");
 
     const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(texto)}`;
     window.open(waUrl, "_blank", "noopener,noreferrer");
@@ -165,7 +172,6 @@ ${message}
                     </a>
                   )}
 
-                  {/* Botón WhatsApp con datos del formulario */}
                   <Button className="btn btn-whatsapp" onClick={handleWhatsApp}>
                     WhatsApp
                   </Button>
@@ -175,72 +181,104 @@ ${message}
           </Col>
 
           {/* PANEL DERECHO: INFO + MAPA + REDES */}
-          <Col md={5}>
-            <Card className="p-4 h-100">
-              <h5 className="mb-3" style={{ color: "var(--primario-oscuro)" }}>Información</h5>
+<Col md={5}>
+  <Card className="h-100 d-flex flex-column">
+    <Card.Body className="p-4">
+      <h5 className="mb-3" style={{ color: "var(--primario-oscuro)" }}>Información</h5>
 
-              <p className="mb-1">
-                <strong>Email:</strong> <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
-              </p>
-              <p className="mb-1">
-                <strong>Teléfono:</strong> <a href={`tel:${siteConfig.phone}`}>{siteConfig.phone}</a>
-              </p>
-              <p className="mb-1">
-                <strong>Dirección:</strong> <a href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">{siteConfig.address}</a>
-              </p>
-              <p className="mb-3"><strong>Horario:</strong> {siteConfig.hours}</p>
+      <p className="mb-1">
+        <strong>Email:</strong> <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+      </p>
+      <p className="mb-1">
+        <strong>Teléfono:</strong> <a href={`tel:${siteConfig.phone}`}>{siteConfig.phone}</a>
+      </p>
+      <p className="mb-1">
+        <strong>Dirección:</strong> <a href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">{siteConfig.address}</a>
+      </p>
+      <p className="mb-3"><strong>Horario:</strong> {siteConfig.hours}</p>
 
-              {/* EMBED MAPS (responsive). Si no hay embed, mostramos el botón. */}
-              {siteConfig.mapsEmbedSrc ? (
-                <div className="rounded overflow-hidden shadow-sm mb-3">
-                  <Ratio aspectRatio="16x9">
-                    <iframe
-                      src={siteConfig.mapsEmbedSrc}
-                      style={{ border: 0 }}
-                      allowFullScreen
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title="Ubicación en Google Maps"
-                    />
-                  </Ratio>
-                </div>
-              ) : (
-                siteConfig.mapsUrl && (
-                  <a className="btn btn-outline-secondary mb-3" href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">
-                    Ver en Google Maps
-                  </a>
-                )
-              )}
+      {/* MAPA sin margen extra abajo (lo aporta el footer) */}
+      {siteConfig.mapsEmbedSrc ? (
+        <div className="rounded overflow-hidden shadow-sm mb-0">
+          <Ratio aspectRatio="16x9">
+            <iframe
+              src={siteConfig.mapsEmbedSrc}
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Ubicación en Google Maps"
+            />
+          </Ratio>
+        </div>
+      ) : (
+        siteConfig.mapsUrl && (
+          <a className="btn btn-outline-secondary mb-0" href={siteConfig.mapsUrl} target="_blank" rel="noreferrer">
+            Ver en Google Maps
+          </a>
+        )
+      )}
+    </Card.Body>
 
-              {/* CTA redes: más llamativos y anchos */}
-              <div className="row g-2">
-                {siteConfig.social.instagram && (
-                  <div className="col-12 col-sm-6">
-                    <a
-                      href={siteConfig.social.instagram}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn btn-instagram w-100 d-flex align-items-center justify-content-center"
-                    >
-                      <FaInstagram className="me-2" /> Instagram
-                    </a>
-                  </div>
-                )}
-                {siteConfig.social.facebook && (
-                  <div className="col-12 col-sm-6">
-                    <a
-                      href={siteConfig.social.facebook}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn btn-facebook w-100 d-flex align-items-center justify-content-center"
-                    >
-                      <FaFacebook className="me-2" /> Facebook
-                    </a>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </Col>
+    {/* Footer fijo al fondo con padding simétrico */}
+    <Card.Footer className="bg-transparent border-0 px-4 pt-3 pb-3 mt-auto">
+      <div className="row g-2">
+        {siteConfig.social.instagram && (
+          <div className="col-12 col-sm-6">
+            <a
+              href={siteConfig.social.instagram}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-instagram w-100 d-flex align-items-center justify-content-center"
+            >
+              <FaInstagram className="me-2" /> Instagram
+            </a>
+          </div>
+        )}
+
+        {siteConfig.social.facebook && (
+          <div className="col-12 col-sm-6">
+            <a
+              href={siteConfig.social.facebook}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-facebook w-100 d-flex align-items-center justify-content-center"
+            >
+              <FaFacebook className="me-2" /> Facebook
+            </a>
+          </div>
+        )}
+
+        {siteConfig.social.youtube && (
+          <div className="col-12 col-sm-6">
+            <a
+              href={siteConfig.social.youtube}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-youtube w-100 d-flex align-items-center justify-content-center"
+            >
+              <FaYoutube className="me-2" /> YouTube
+            </a>
+          </div>
+        )}
+
+        {siteConfig.social.linkedin && (
+          <div className="col-12 col-sm-6">
+            <a
+              href={siteConfig.social.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-linkedin w-100 d-flex align-items-center justify-content-center"
+            >
+              <FaLinkedin className="me-2" /> LinkedIn
+            </a>
+          </div>
+        )}
+      </div>
+    </Card.Footer>
+  </Card>
+</Col>
+
         </Row>
       </Container>
     </section>
