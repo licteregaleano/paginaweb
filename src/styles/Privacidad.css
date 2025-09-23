@@ -1,0 +1,38 @@
+.privacy-section {
+  background: var(--blanco);
+}
+
+.privacy-title {
+  color: var(--primario-claro);
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.privacy-card {
+  border: 1px solid #eee;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.privacy-h3 {
+  margin-top: 2rem;
+  margin-bottom: .75rem;
+  color: var(--primario-oscuro);
+  font-weight: 700;
+}
+
+.privacy-h4 {
+  margin-top: 1.25rem;
+  margin-bottom: .5rem;
+  color: var(--primario-oscuro);
+  font-weight: 600;
+}
+
+.privacy-card p, 
+.privacy-card li {
+  color: #333;
+}
+
+.privacy-card .lead {
+  color: #4b2948;
+}

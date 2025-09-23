@@ -44,6 +44,7 @@ export default function Footer() {
               <li><a href="/#testimonios">Testimonios</a></li>
               <li><a href="/blog">Blog</a></li>
               <li><a href="/contacto">Contacto</a></li>
+              <li><a href={siteConfig.privacyUrl}>Privacidad</a></li>
               {/* Si algún día querés el juego, lo reactivás: */}
               {/* <li><a href="/minijuego">Juego para parejas</a></li> */}
             </ul>

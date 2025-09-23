@@ -9,6 +9,7 @@ import Contacto from './pages/Contacto';
 import Minijuego from './pages/Minijuego';
 import Footer from './components/Footer';
 import Post from "./pages/Post.jsx";
+import Privacidad from "./pages/Privacidad.jsx";
 
 import "./styles/animaciones.css";
 
@@ -29,6 +30,7 @@ function App() {
         />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<Post />} />
+        <Route path="/privacidad" element={<Privacidad />} />
       </Routes>
       <Footer />
     </>
