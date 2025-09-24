@@ -35,7 +35,21 @@ const Acerca = () => (
         <li>
           Diplomada en <em>Psicología Cognitiva y Neurociencias</em>.
         </li>
+        <li>
+          <strong>Certificación de Coach Profesional</strong>, avalada por la 
+          <em> International Coaching Community</em>, con la cual brindo 
+          asesoría como Coach en el ámbito de la salud mental.
+        </li>
       </ul>
+    </section>
+
+    {/* EXPERIENCIA DE VIDA */}
+    <section className="mb-5">
+      <h2>Experiencia de vida</h2>
+      <p>
+        Soy <strong>madre de tres varones</strong>, un regalo de la vida que me
+        enseñó que nuestra existencia puede ser caóticamente hermosa.
+      </p>
     </section>
 
     {/* EXPERIENCIA PROFESIONAL Y DIVULGACIÓN */}
@@ -80,7 +94,7 @@ const Acerca = () => (
       </p>
     </section>
 
-    {/* LÍNEAS DE ATENCIÓN */}
+    {/* ÁREAS DE ATENCIÓN */}
     <section className="mb-5">
       <h2>Áreas de atención</h2>
       <ul>
