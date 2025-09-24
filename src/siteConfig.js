@@ -1,6 +1,6 @@
 const siteConfig = {
     brand: "Teresa Galeano - Psicóloga",
-    email: "Licgaleano@gmail.com",
+    email: "licteregaleano@gmail.com",
     phone: "+595 981 573768",
     whatsapp: "+595981573768",
     address: "Del Escudo 354 c/ Av. Brasilia, Asunción, Paraguay",
