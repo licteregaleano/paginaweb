@@ -2,7 +2,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import '../styles/Servicios.css';
 import useReveal from '../hooks/useReveal';
 
-const IMG_BASE = '../src/assets/services';
+const IMG_BASE = '/services';
 
 const serviciosHome = [
   {
