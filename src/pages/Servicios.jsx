@@ -7,8 +7,7 @@ function ServiceBlock({ item, reverse, altBg }) {
   const imgRev = useReveal({ threshold: 0.2 });
   const txtRev = useReveal({ threshold: 0.2 });
 
-  // Si luego agregás /assets/services/<id>.jpg, se usará como fondo.
-  const bgUrl = item.image ?? `./src/assets/services/${item.id}.jpg`;
+  const bgUrl = item.image ?? `/services/${item.id}.jpg`;
 
   return (
     <Row
