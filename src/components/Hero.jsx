@@ -32,7 +32,7 @@ const Hero = () => {
                 >
                     <h1>Te acompaño en tu camino hacia el bienestar emocional</h1>
                     <p>
-                        Más de 25 años ayudando a personas a superar momentos difíciles y reconectar con su equilibrio interno.
+                        Más de 25 años ayudando a personas a superar momentos difíciles y reconectar con su equilibrio emocional.
                     </p>
                     <Button variant="salmon" size="lg" href="/contacto" className="hero-cta lift">
                         Agendar una consulta
